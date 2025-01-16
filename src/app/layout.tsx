@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from '@/components/ui/toaster'
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -17,11 +17,11 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | Repair Shop',
-    default: "Repair Shop"
+    template: '%s | Computer Repair Shop',
+    default: 'Computer Repair Shop',
   },
-  description: "Next 15 and React 19",
-  applicationName: "Repair Shop App"
+  description: "Dan's Computer Repair Shop",
+  applicationName: "Repair Shop"
 };
 
 export default function RootLayout({
@@ -31,11 +31,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      { /** suppressHydrationWarning */}
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-         <ThemeProvider
+        <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem

@@ -1,6 +1,7 @@
 import type { LucideIcon } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -8,34 +9,38 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-type CustomMenuProps = {
+type Props = {
     icon: LucideIcon,
     label: string,
-    options: {
+    choices: {
         title: string,
         href: string,
     }[],
-};
+}
 
-export function CustomMenu({
-    icon: Icon, label, options,
-}: CustomMenuProps) {
+export function NavButtonMenu({
+    icon: Icon,
+    label,
+    choices,
+}: Props) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button
-                  variant="ghost"
-                  size="icon"
-                  className="rounded-full"
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-full"
                 >
-                    <Icon className="h-1[1.2rem] w-[1.2rem]" />
+                    <Icon className="h-[1.2rem] w-[1.2rem]" />
                     <span className="sr-only">{label}</span>
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                {options.map(option => (
-                    <DropdownMenuItem key={option.title} asChild>
-                        <Link href={option.href}>{option.title}</Link>
+                {choices.map(choice => (
+                    <DropdownMenuItem key={choice.title} asChild>
+                        <Link href={choice.href}>
+                            {choice.title}
+                        </Link>
                     </DropdownMenuItem>
                 ))}
             </DropdownMenuContent>

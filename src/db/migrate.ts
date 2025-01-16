@@ -1,16 +1,16 @@
-import { db } from "./index";
-import { migrate } from "drizzle-orm/neon-http/migrator";
+import { db } from "./index"
+import { migrate } from "drizzle-orm/neon-http/migrator"
 
 const main = async () => {
     try {
         await migrate(db, {
-            migrationsFolder: "src/db/migrations",
-        });
-        console.log("*********** Migration completed!!!")
-    } catch (err) {
-        console.error("Error during migration **** ", err);
-        process.exit(1);
+            migrationsFolder: 'src/db/migrations'
+        })
+        console.log('Migration completed')
+    } catch (error) {
+        console.error('Error during migration: ', error)
+        process.exit(1)
     }
 }
 
-main();
+main()

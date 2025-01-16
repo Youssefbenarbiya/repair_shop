@@ -1,5 +1,5 @@
 {
-  "id": "83ae58df-1b6c-488a-9144-f76c5e6af12d",
+  "id": "f89ce731-6d23-44b5-bfa7-d1dae63a96d8",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -42,12 +42,6 @@
           "name": "address1",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": true
-        },
-        "address2": {
-          "name": "address2",
-          "type": "varchar",
-          "primaryKey": false,
           "notNull": false
         },
         "city": {
@@ -70,7 +64,7 @@
         },
         "notes": {
           "name": "notes",
-          "type": "varchar",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
@@ -115,9 +109,7 @@
           ]
         }
       },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
+      "checkConstraints": {}
     },
     "public.tickets": {
       "name": "tickets",
@@ -194,16 +186,12 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
+      "checkConstraints": {}
     }
   },
   "enums": {},
   "schemas": {},
   "sequences": {},
-  "roles": {},
-  "policies": {},
   "views": {},
   "_meta": {
     "columns": {},

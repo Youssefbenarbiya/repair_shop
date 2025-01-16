@@ -1,49 +1,56 @@
 import { getCustomer } from "@/lib/queries/getCustomer";
 import { BackButton } from "@/components/BackButton";
+import * as Sentry from "@sentry/nextjs"
 import CustomerForm from "@/app/(rs)/customers/form/CustomerForm";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
-// This is a new feature in NextJs 15
-type SearchType = { [key: string]: string | undefined };
-
-export async function generateMetada({
-  searchParams,
+export async function generateMetadata({
+    searchParams,
 }: {
-  searchParams: Promise<SearchType>;
+    searchParams: Promise<{ [key: string]: string | undefined }>
 }) {
-  const { customerId } = await searchParams;
-  if (!customerId) return { title: "New Customer" }
-  return { title: `Edit Customer #${customerId}`}
-};
+    const { customerId } = await searchParams
 
-// Also a new feature, define the component as async in order to have access to data (DB layer)
+    if (!customerId) return { title: "New Customer" }
+
+    return { title: `Edit Customer #${customerId}` }
+}
+
 export default async function CustomerFormPage({
-  searchParams,
+    searchParams,
 }: {
-  searchParams: Promise<SearchType>;
+    searchParams: Promise<{ [key: string]: string | undefined }>
 }) {
-  try {
-    // This value is obtained from the url
-    const { customerId } = await searchParams;
+    try {
+        const { getPermission } = getKindeServerSession()
+        const managerPermission = await getPermission("manager")
+        const isManager = managerPermission?.isGranted
 
-    if (customerId) {
-      const customerData = await getCustomer(parseInt(customerId));
+        const { customerId } = await searchParams
 
-      if (!customerData) {
-        return (
-          <>
-            <h2 className="text-2xl mb-2">Customer ID #{customerId} not found</h2>
-            <BackButton title="Go Back" variant="secondary" />
-          </>
-        );
-      }
-      return <CustomerForm customer={customerData} />
-    } else {
-      //New customer form component
-      return <CustomerForm />
+        // Edit customer form 
+        if (customerId) {
+            const customer = await getCustomer(parseInt(customerId))
+
+            if (!customer) {
+                return (
+                    <>
+                        <h2 className="text-2xl mb-2">Customer ID #{customerId} not found</h2>
+                        <BackButton title="Go Back" variant="default" />
+                    </>
+                )
+            }
+            // put customer form component 
+            return <CustomerForm key={customerId} isManager={isManager} customer={customer} />
+        } else {
+            // new customer form component 
+            return <CustomerForm key="new" isManager={isManager} />
+        }
+
+    } catch (e) {
+        if (e instanceof Error) {
+            Sentry.captureException(e)
+            throw e
+        }
     }
-  } catch (err) {
-    if (err instanceof Error) {
-      throw err;
-    }
-  }
 }

@@ -1,39 +1,35 @@
-import { Metadata } from "next";
-import Form from "next/form";
-import { Input } from "@/components/ui/input";
-import CustomSearch from "@/components/CustomSearch";
-import { getOpenTickets, getTicketsBySearch } from "@/lib/queries/getTicketsBySearch";
-import TicketTable from "@/app/(rs)/tickets/TicketTable";
-import type { TicketSearchType } from "@/lib/queries/getTicketsBySearch";
+import TicketSearch from "@/app/(rs)/tickets/TicketSearch"
+import { getOpenTickets } from "@/lib/queries/getOpenTickets"
+import { getTicketSearchResults } from "@/lib/queries/getTicketSearchResults"
+import TicketTable from "@/app/(rs)/tickets/TicketTable"
 
-export const metadata: Metadata = {
-  title: "Ticket Search",
-};
-
-type SearchType = { [key: string]: string | undefined };
+export const metadata = {
+    title: "Ticket Search",
+}
 
 export default async function Tickets({
-  searchParams,
+    searchParams,
 }: {
-  searchParams: Promise<SearchType>;
+    searchParams: Promise<{ [key: string]: string | undefined }>
 }) {
-  const { searchText } = await searchParams;
-  let results: TicketSearchType = [];
+    const { searchText } = await searchParams
 
-  if (!searchText) {
-    results = await getOpenTickets();
-  } else {
-    results = await getTicketsBySearch(searchText);
-  }
+    if (!searchText) {
+        const results = await getOpenTickets()
+        return (
+            <>
+                <TicketSearch />
+                {results.length ? <TicketTable data={results} /> : <p className="mt-4">No open tickets found</p>}
+            </>
+        )
+    }
 
+    const results = await getTicketSearchResults(searchText)
 
-  return (
-    <>
-      <Form action="/tickets" className="flex gap-2 items-center">
-        <Input name="searchText" type="text" placeholder="Search Tickets" className="w-full" />
-        <CustomSearch />
-      </Form>
-      { results.length > 0 ? <TicketTable data={results} /> : <p className="mt-4">No results found</p>}
-    </>
-  );
+    return (
+        <>
+            <TicketSearch />
+            {results.length ? <TicketTable data={results} /> : <p className="mt-4">No results found</p>}
+        </>
+    )
 }

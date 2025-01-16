@@ -1,13 +1,14 @@
 "use client"
 
-import { useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form"
+
 import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '@/components/ui/form'
 
 import {
     Select,
@@ -17,34 +18,36 @@ import {
     SelectValue,
 } from '@/components/ui/select'
 
-type SelectProps<TSchema> = {
-    fieldTitle: string,
-    nameInSchema: keyof TSchema & string,
-    className?: string,
-    options: {
-        id: string,
-        description: string,
-    }[],
-  }
+type DataObj = {
+    id: string,
+    description: string,
+}
 
-  export function CustomSelect<TSchema>({
-    fieldTitle,
-    nameInSchema,
-    className,
-    options
-  }: SelectProps<TSchema>) {
-    const selectForm = useFormContext();
+type Props<S> = {
+    fieldTitle: string,
+    nameInSchema: keyof S & string,
+    data: DataObj[],
+    className?: string,
+}
+
+export function SelectWithLabel<S>({
+    fieldTitle, nameInSchema, data, className
+}: Props<S>) {
+    const form = useFormContext()
 
     return (
         <FormField
-            control={selectForm.control}
+            control={form.control}
             name={nameInSchema}
             render={({ field }) => (
                 <FormItem>
                     <FormLabel
-                        htmlFor={nameInSchema}
                         className="text-base"
-                    >{fieldTitle}</FormLabel>
+                        htmlFor={nameInSchema}
+                    >
+                        {fieldTitle}
+                    </FormLabel>
+
                     <Select
                         {...field}
                         onValueChange={field.onChange}
@@ -57,18 +60,22 @@ type SelectProps<TSchema> = {
                                 <SelectValue placeholder="Select" />
                             </SelectTrigger>
                         </FormControl>
+
                         <SelectContent>
-                            {options.map(option => (
+                            {data.map(item => (
                                 <SelectItem
-                                    key={`${nameInSchema}_${option.id}`}
-                                    value={option.id}
-                                >{option.description}</SelectItem>
+                                    key={`${nameInSchema}_${item.id}`}
+                                    value={item.id}
+                                >
+                                    {item.description}
+                                </SelectItem>
                             ))}
                         </SelectContent>
+
                     </Select>
                     <FormMessage />
                 </FormItem>
             )}
-        ></FormField>
-    );
-  }
+        />
+    )
+}
